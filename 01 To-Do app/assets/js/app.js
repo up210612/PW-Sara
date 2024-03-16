@@ -1,40 +1,65 @@
-// Elementos HTML
-const userSelect = document.getElementById('select-users');
-const userContainer = document.getElementById('user-container');
-const taskContainer = document.getElementById('task-container');
+document.addEventListener('DOMContentLoaded', () => {
+  const dropdown = document.getElementById('usuario-dropdown');
+  const userContainer = document.getElementById('user-container');
+  const taskContainer = document.getElementById('task-container');
+  let usuarios = [];
+  let tareas = [];
 
-// Codígo nesesario para mostrar información
+  function inicializarDropdown(usuarios) {
+      usuarios.forEach(usuario => {
+          const option = document.createElement('option');
+          option.text = usuario.firstname;
+          option.value = usuario.id;
+          dropdown.appendChild(option);
+      });
+  }
+  async function cargarUsuarios() {
+      const response = await fetch('usuarios.json');
+      usuarios = await response.json();
+      return usuarios;
+  }
 
-// Fin de codígo 
+  async function cargarTareas() {
+      const response = await fetch('tareas.json');
+      tareas = await response.json();
+      return tareas;
+  }
 
-// Funciones
-/**
- * Optiene una lista de todos los usuarios que pueden existir
- * @returns {Promise<User[]>}
- */
-function getAllUsers() {
-  return fetch('/data/usuarios.json')
-    .then(resp => resp.json());
+function mostrarTareas(usuarioId) {
+    const usuarioSeleccionado = usuarios.find(usuario => usuario.id === parseInt(usuarioId));
+    
+    userContainer.innerHTML = `
+        <h3>Información del usuario seleccionado</h3>
+        <ul>
+            <li>Nombre completo: ${usuarioSeleccionado.firstname} ${usuarioSeleccionado.lastname}</li>
+            <li>Email: ${usuarioSeleccionado.email}</li>
+        </ul>
+    `;
+
+    const tareasUsuario = tareas.filter(tarea => tarea.userId === parseInt(usuarioId));
+    
+    taskContainer.innerHTML = `
+        <h3>Lista de tareas del usuario</h3>
+        <ul>
+            ${tareasUsuario.map(tarea => `
+                <li>
+                    ${tarea.title}
+                    <input type="checkbox" ${tarea.completed ? 'checked' : ''}>
+                </li>`).join('')}
+        </ul>
+    `;
 }
 
-/**
- * Optiene una lista de todas las tareas que hay de todos los usuarios
- * @returns {Promise<Task[]>}
- */
-function getAllTasks() {
-  return fetch('/data/usuarios.json')
-    .then(resp => resp.json());
-}
+  dropdown.addEventListener('change', () => {
+      const selectedUserId = dropdown.value;
+      mostrarTareas(selectedUserId);
+  });
 
-/**
- * @typedef User Definición de un usuario
- * @property {number} id Identificador unico del usuario
- * @property {string} firtsname Primer nombre del usuario
- * @property {string} lastname Apellido del usuario
- * @property {string} email Correo electronico git
- * @typedef Task Definición de una tarea de usuario
- * @property {number} id Identificador unico de la tarea
- * @property {number} userId IDentificador del uaurio a quien corresponde la tarea
- * @property {string} title Titulo de la tarea
- * @property {boolean} completed Estado de la tarea si esta completada o no
- */
+  Promise.all([cargarUsuarios(), cargarTareas()])
+      .then(() => {
+          inicializarDropdown(usuarios);
+      })
+      .catch(error => {
+          console.error('Error al cargar los datos:', error);
+      });
+});
