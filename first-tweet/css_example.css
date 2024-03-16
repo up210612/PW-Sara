@@ -1,0 +1,40 @@
+* {
+    /*esta estructura es para estilos de forma universal*/
+    background-color: #15202B;
+    padding: 0;
+    margin: 0;
+    
+}
+
+/*Selector por etiqueta*/
+h1{
+    color: brown;
+}
+/*Selector por ID*/
+#nombre {
+    font-weight: bold;
+    color: rgb(33, 11, 83);
+}
+
+#at {
+    font-size: small;
+    color: rgb(58, 12, 73);
+}
+
+/*Selector por clase*/
+.colorTextBlue {
+    color: rgb(255, 255, 255);
+
+}
+
+.fontStyle{
+    font-style: italic;
+    font-weight: 600;
+}
+
+/*
+    
+
+
+
+*/

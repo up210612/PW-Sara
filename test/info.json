@@ -1,0 +1,22 @@
+{
+    "usuarios": [
+        {
+            "name": "Sara Garcia",
+            "years": 20,
+            "alive": true
+        },
+
+        {
+            "name": "Rogelio Trejo",
+            "years": 24,
+            "alive": true
+        },
+
+        {
+            "name": "Juanito Alcachofa",
+            "years": 56,
+            "alive": false
+        }
+
+    ]
+}
